@@ -14,5 +14,6 @@
 		<input type="hidden" name="id" value="${usuario.id }" />
 		<input type="submit" value="Lista de meus emprestimos" />
 	</form>
+	<a href="logoutUsuario">Sair do sistema</a>
 </body>
 </html>

@@ -13,14 +13,18 @@ import br.com.biblioteca.model.Usuario;
 @Controller
 @SessionAttributes({"usuarioLogado"})
 public class UsuarioController {
-	//ir para menu
+	private UsuarioDAO dao;
+	
+	public UsuarioController(){
+		this.dao=new UsuarioDAO();
+	}
+	
 	@RequestMapping("menuUsuario")
 	public String irMenu(){
 		return "usuario/menu";
 	}
 	@RequestMapping("cadastroUsuario")
 	public String cadastro(Usuario u){
-		UsuarioDAO dao = new UsuarioDAO();
 		dao.adiciona(u);
 		
 		return "index";
@@ -32,10 +36,8 @@ public class UsuarioController {
 	}
 	//login
 	@RequestMapping("efetuarLogin")
-	
 	public ModelAndView efetuarLogin(Usuario usuario, HttpSession session){
 		ModelAndView mv = new ModelAndView("usuario/menu");		//instancia MV e insere o String da proxima pagina
-		UsuarioDAO dao = new UsuarioDAO();
 		try{
 			//cria DAO para validar usuario, se der certo...
 			if(dao.existeUsuario(usuario)){
@@ -57,5 +59,10 @@ public class UsuarioController {
 		return mv;
 	}
 	
+	@RequestMapping("logoutUsuario")
+	public String logout(HttpSession session){
+		session.invalidate();
+		return "redirect:loginForm";
+	}
 	
 }

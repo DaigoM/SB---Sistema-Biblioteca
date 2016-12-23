@@ -14,6 +14,11 @@ import br.com.biblioteca.model.Usuario;
 
 @Controller
 public class FuncionarioController {
+	private FuncionarioDAO dao;
+	
+	public FuncionarioController(){
+		this.dao=new FuncionarioDAO();
+	}
 	
 	@RequestMapping("menuFuncionario")
 	public String irMenu(){
@@ -23,7 +28,6 @@ public class FuncionarioController {
 	@RequestMapping("efetuarLoginAdm")
 	public ModelAndView efetuarLogin(Usuario usuario, HttpSession session){
 		ModelAndView mv = new ModelAndView("usuario/adm/menu");		//instancia MV e insere o String da proxima pagina
-		FuncionarioDAO dao = new FuncionarioDAO();
 		try{
 			//cria DAO para validar usuario, se der certo...
 			if(dao.existeFuncionario(usuario)){
@@ -52,7 +56,6 @@ public class FuncionarioController {
 	@RequestMapping("adicionarItem")
 	public String adicionarItem(@Valid Item item){
 		try{
-		FuncionarioDAO dao = new FuncionarioDAO();
 		dao.adicionarItem(item);
 		}catch(Exception e){
 			e.printStackTrace();

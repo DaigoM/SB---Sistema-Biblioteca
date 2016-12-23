@@ -20,13 +20,20 @@ import br.com.biblioteca.model.Usuario;
 @Controller
 @SessionAttributes({"usuarioLogado"})
 public class EmprestimoController {
+	private EmprestimoDAO dao;
+	private ModelAndView mv;
+	
+	public EmprestimoController(){
+		this.dao=new EmprestimoDAO();
+	}
+	
 	@RequestMapping("novaSolicitacao")
 	public String novaSolicitacao(){
 		return "usuario/emprestimo";
 	}
 	@RequestMapping("confirmaEmprestimo")
 	public ModelAndView confirmaEmprestimo(ItemSolicitacao is, HttpServletRequest req){
-		ModelAndView mv = new ModelAndView("usuario/confirmar");
+		mv = new ModelAndView("usuario/confirmar");
 		Emprestimo emprestimo=new Emprestimo();
 		Item item = new Item();
 		item.setId(is.getId_item());
@@ -36,7 +43,6 @@ public class EmprestimoController {
 		Usuario usuario = new Usuario();
 		usuario.setId(is.getId_usuario());
 		emprestimo.setUsuario(usuario);
-		EmprestimoDAO dao = new EmprestimoDAO();
 		Usuario u = (Usuario) req.getSession().getAttribute("usuarioLogado");
 		if(u.getTipo().equals("estudante") && item.getTipo().equals("especial")){
 			mv.setViewName("usuario/restricao/nao-professor");
@@ -52,8 +58,7 @@ public class EmprestimoController {
 	}
 	@RequestMapping("meusEmprestimos")
 	public ModelAndView mostrarEmprestimos(HttpServletRequest req){
-		ModelAndView mv = new ModelAndView("usuario/meus-livros");
-		EmprestimoDAO dao=new EmprestimoDAO();
+		mv = new ModelAndView("usuario/meus-livros");
 		Usuario u = (Usuario) req.getSession().getAttribute("usuarioLogado");
 		long id = u.getId();
 		List<Emprestimo> emprestimos=dao.consultarMinhaLista(id);
@@ -62,22 +67,19 @@ public class EmprestimoController {
 	}
 	@RequestMapping("listaEmprestimo")
 	public ModelAndView listarEmprestimo(){
-		ModelAndView mv = new ModelAndView("usuario/adm/lista-solicitacao");
-		EmprestimoDAO dao = new EmprestimoDAO();
+		mv = new ModelAndView("usuario/adm/lista-solicitacao");
 		List<Emprestimo> emprestimos=dao.consultarEmprestimo();
 		mv.addObject("emprestimo",emprestimos);
 		return mv;
 	}
 	@RequestMapping("validarSolicitacao")
 	public String validarSolicitacao(Emprestimo e){
-		EmprestimoDAO dao = new EmprestimoDAO();
 		dao.validaSolicitacao(e);
 		System.out.println("validado!");
 		return "redirect:listaEmprestimo";
 	}
 	@RequestMapping("registrarDevolucao")
 	public String registrarDevolucao(Emprestimo e){
-		EmprestimoDAO dao = new EmprestimoDAO();
 		dao.registraDevolucao(e);
 		System.out.println("A devolucao foi registrada!");
 		return "redirect:listaEmprestimo";
